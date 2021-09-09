@@ -1,0 +1,164 @@
+filesystem and booting
+----------
+Linux Booting process
+https://www.youtube.com/watch?v=RgLMBXg5b9I
+https://www.youtube.com/watch?v=ZtVpz5VWjAs
+https://www.youtube.com/watch?v=LPu3IZwbOA8
+- BIOS
+	basic input output system. 
+	performs system integrity checks (POST)
+	Looks for MBR in disk and loads it to memory (we can change where to load MBR from like disk, cd, dvd)
+- MBR - Master boot record
+	This is present in the first sector of the bootable disk. /dev/sda or /dev/hda
+	512 bytes > (446 bytes of primary boot loader) + (64 bytes of partition table) + MBR(validation check) 2 bytes
+	In short, MBR loads and runs the GRUB boot loader
+- GRUB > Boot loader LILO and GRUB. GRUB replaced LILO. Purpose is to start the OS using init.rd
+	Grand unified bootloader
+	GRUB initially displays the list of kernals available and it waits. If nothing is picked, It loads the default in grub configuration file /boot/grub/grub.conf (which contains kernal and initrd image)
+	loads kernal and executes initrd. this is temporary file system
+- Kernal
+	Loads the root file system as speicifed in grub.conf
+	Once it does it, it runs the init process in /sbin/init process
+	initrd is used as temporary files sytem until Kernal mounts the root filesystem
+- Init
+	Looks at /etc/inittab for run levels
+	Run levels decide which programs are loaded on startup
+	0 - halt > issuing shut down or poweroff (init 0 > turns down the system)
+	1 - single user mode (Its a safe mode for single user only)
+	2 - multi user without NFS (It is multi user mode with no networking. Safe mode with no network)
+	3 - full multiuser mode (Most used run level of all. This is the mode all servers run and provides all functionality. downside No GUI)
+	4 - unused ()
+	5 - X11 (Multi user with networking and GUI)
+	6 - reboot (init 6 > reboots the system)
+- runlevel
+	Depends on the level of run level picked from initd, following files are loaded
+	- /etc/rc.d/rc0.d/
+	- /etc/rc.d/rc1.d/
+	- /etc/rc.d/rc2.d/
+	- /etc/rc.d/rc3.d/
+	- /etc/rc.d/rc4.d/
+	- /etc/rc.d/rc5.d/	
+	- /etc/rc.d/rc6.d/
+	Under these directories, there are programs that start with S and K. S(Start) for start up and K(Kill) for shutdown
+
+We can switch the runlevels once we are in terminal
+If permanently change the runlevel, i can specify in the inittab. /etc/inittab
+
+----------
+
+some_process >> output.log 2>&1
+
+standard input <0
+standard output >1
+standard error >2
+
+&1 in above means that 2 standard error output should go to the same log
+----------
+
+https://www.youtube.com/watch?v=B6kg2zeJ9do
+https://www.grymoire.com/Unix/Inodes.html
+https://www.youtube.com/watch?v=_h30HBYxtws
+
+Windows - NTFS, Exfat etc..
+Linux - FAT32, NTFS, EXT4 etc..
+
+File system 
+File Name
+Inode
+data
+
+EXT4 
+
+- superblock, inodes, datablocks
+- ext has fixed number of inodes. file has limit of 16TB
+- Automatically set ups some space like 5% for system full issues 
+
+is most modern and default file system for linux max file size 16TB. mac volume size 1EB Exaa Byte
+
+mount -t ext4 /dev/sdb1 /mnt/storage_device_name -> mount a file system
+sync -> command forces all the data sitting in cache to disk. like for example usb etc..
+fsck -> this is used to do integirty checks on the "UNMOUNTED" file system
+tune2fs -> sets the back up space (reserved blocks) needed by the kernal
+e4defrag -> on spinning drives, defragmentation helps in removing non contiguous data
+
+what is superblock? 
+
+ls -il -> gives inode number in the inode datastructure
+
+stat <file_nama>
+gives all the stats of the file that are in the inode. accessed/updated/permissions/owner size blocks etc..
+
+inode
+datastructure that has all info about the file except its name and data
+first inode is root /
+In inode datastructure all it has is files
+
+lsblk 
+gives the device and partition info
+
+iostat -> gives the device and writes to it
+iotop -> Disk reads and writes per process
+	iotop --only -> gives only processes thats stressing system
+	iotop -p <PID> -> per process
+	iotop -p 42576 -p 42577 -p 42578 -p 42579 -p 42580 -p 42581 -> list of processes
+----------
+files in linux
+
+/bin > binaries. Basic functions like cat, ls etc are here. Accessible when running single user mode
+/sbin > system binaries that system admins users. Accessible when running single user mode
+/boot > Contains all the files that booting process needs
+/dev > has all the devices and partions like /dev/sda1 /dev/sda2 etc..
+/etc > configs are present here like system wide. like for example yum etc..
+/lib > libraries are present here. These libraries are used by binaries to perform tasks
+/mnt > here is where mounted drives are present
+/media > automatic mounted directories are present here
+	difference between mnt and media is, if we manually want to load, mnt is used else if automatically loads, media is used
+/opt > optional folder where vendor installed software etc.. all the applications are present here
+/proc > sudo files that contains system processes and resources. ex: /proc/<PID>. This is kernal translating information about processes to purest files 
+/root > root users home folder
+/home > users other than root are present here
+/run > tempfs. newest file system that loded into memory
+/sys > way to interact to kernal not written to disk. It gets created everytime system loads up
+/tmp > temp direcotry where temporary copy of data is present. This is emptied when system reboots
+/usr > user application installed software is present here unlike the bin which is used by system. non essential to system operation 
+/var > variable directory. Contains files that are expected to grown in size. /var/crash, /var/log etc.
+----------
+umask
+
+set default permissions for files created
+
+vi /etc/profile
+vi ~/.bashrc
+
+Octal value : Permission
+0 : read, write and execute
+1 : read and write
+2 : read and execute
+3 : read only
+4 : write and execute
+5 : write only
+6 : execute only
+7 : no permissions
+
+symbolic
+umask u=rwx,g=,o=
+
+umask u=rwx,g=,o=
+umask 077
+----------
+RAID
+https://www.youtube.com/watch?v=BZE4cIm23Js
+
+redundant array of inexpensive disks
+----------
+
+DD:
+dd if=file1 of=file2 conv=ucase
+
+you want to skip first 4 bytes of an input file, then you should first set ibs to 4 and then use 1 as the value for skip. This will ensure that the tool will skip 1 block of 4 bytes while reading the input file.
+dd if=file1 of=file2 ibs=4 skip=1 conv=ucase
+
+To see stats
+dd if=test | pv | of=test1 
+
+----------

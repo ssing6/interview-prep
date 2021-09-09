@@ -1,0 +1,43 @@
+process
+
+https://www.linux.com/training-tutorials/fiddling-linux-processes-memory/
+
+ready
+running
+waiting
+terminated
+
+thread
+New
+Runnable
+Blocked
+Waiting
+Timed Waiting
+Terminated
+
+swap space is placed on the outer edge of the parition as in spinning disk, outer spins faster than internal and retrieving is faster
+
+32bit 4gb virtual memory
+64bit 128TB virtual memory
+
+----
+
+process is an active entity created by kernal
+process executes a program. It has address space in memory. Has
+	- Code segment 
+	- data segment
+	- stack and 
+	- control data
+process executes a program lying in the hard disk
+
+fork clones a parent process and a child process is created. Both parent and child processes are same except process id (pid)
+
+return value is different in parent and child
+
+in parent process, fork returns the child PID. 
+in child process, fork returns pid zero
+
+If we want to run a program, create a process using fork and then exec is used to run a program
+
+exec means, execute a program. 
+

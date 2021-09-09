@@ -1,0 +1,14 @@
+Linux Ports
+
+ftp - 21
+ssh - 22
+tenet - 23
+smtp - 25
+http - 80
+https - 443
+
+DNS servers port 53
+
+The Well Known Ports (0-1023) – which are reserved for the operating system and core services.
+The Registered Ports (1024-49151) – which can be used by applications, specific services, and users.
+The Dynamic and/or Private Ports (49152-65535)

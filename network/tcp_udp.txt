@@ -1,0 +1,106 @@
+TCP - UDP
+
+UDP
+smaller packet size
+Headers 8 bytes
+connection less
+Error correction Carries 16 bit checksum only for ipv6
+When UDP detects corruption its discarded instead of recovering it. Instaed of fixing corruption warning is set
+UDP sends packets once
+Does not compensate of loss
+Packets wont be received in order they sent
+No Congestion control. Even if network is congested UDP sents packets
+Message oriented
+DNS lookups
+Multi media stearming
+UDP can be used in building applications instead of TCP. However, applications take overhead of receiving the packets
+
+
+TCP
+https://www.youtube.com/watch?v=Vdc8TCESIg8
+https://www.youtube.com/watch?v=HCHFX5O1IaQ
+
+Lager packet size
+Header 20 bytes
+Negotiate a connection - 3 way handshake
+Delivery acknowledgements. If any acknowledgement is not received, re transmission of packet is sent in a certain time
+Segments are numbered in TCP. Hence it maintains in order delivery. Even packets are not received in order, TCP arranges packets in order
+Ensures congestion control. 
+Error correction checksum is enabled for ipv4 and ipv6
+Congestion control introduces latency (example voice calls getting stuck in meetings and all are sent at once)
+Stream oriented
+At receiver side, packets are re-oriented of getting proper message (usage of headers and numbers)
+SSH, http and everythinng uses TCP 
+
+Sequence and acknowledgement numbers
+
+
+TCP
+1. Initiate connection > TCP 3 way handshake
+2. Data transfer > client expect the ack number and adds it to seq and sends to server
+3. Terminate connection > TCP 4 step closing session
+
+TCP 3 way handshake
+https://www.youtube.com/watch?v=F27PLin3TV0
+https://www.omnisecu.com/tcpip/tcp-three-way-handshake.php
+** Client always send the sequence number it is expecting. Server sends data in acknowledge number 
+- Client initialtes to server port
+	client sends a SYN=1 ACK=0 
+	(source client port, destination server port) along with seq_num=0(4 bytes)
+	window size(2 bytes) value which is specified by client that 8192-tcp receive buffer(or some number) is what every size it can receive
+	SYN is the initial communication send with what info of what it can handle or what not
+
+- Server sends SYN=1 with ACK=1
+	seq_num=0, ack_num=1(ghost byte), length=0
+	source server port, client destination port
+
+- Client sends ACK=1, SYN=0
+	seq_num=1, ack_num=1
+	(source client port, destination server port)
+
+By the end client finalizes with window scale size or what not. No data is sent in the entire process.
+Connection is established and data is sent back and forth
+
+Data Transfer
+- Server sends data
+- Client sends ACK=1
+
+Terminate session from server
+- Server sends a FIN, ACK
+- Client sends ACK (Now server closed connection)
+- Client sends a packet with FIN, ACK set. 
+- Server sends ACK acknowledges (Now client closed connection)
+
+SYN - synchronize
+ACK - Acknowledge
+FIN - finish
+URG - urgent inform a receiving station that certain data within a segment is urgent and should be prioritized.
+PSH - push  informs the receiving host that the data should be pushed up to the receiving application immediately.
+RST - reset A RST packet is sent either in the middle of the 3-way handshake when the server rejects the connection or is unavailable OR in the middle of data transfer when either the server or client becomes unavailble or rejects further communication without the formal 4-way TCP connection termination process.
+
+
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|          Source Port          |       Destination Port        |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                        Sequence Number                        |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                    Acknowledgment Number                      |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|  Data |           |U|A|P|R|S|F|                               |
+| Offset| Reserved  |R|C|S|S|Y|I|            Window             |
+|       |           |G|K|H|T|N|N|                               |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|           Checksum            |         Urgent Pointer        |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                    Options                    |    Padding    |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                             data                              |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+                         TCP Header Format
+
+- https://en.wikibooks.org/wiki/Communication_Networks/TCP_and_UDP_Protocols
+- https://www.oreilly.com/library/view/http-the-definitive/1565925092/ch04s01.html
+- http://www.tcpipguide.com/free/t_TCPConnectionTermination-2.htm
+
+
